@@ -1,7 +1,7 @@
 <template>
   <div>
     <p>Город:</p>
-    <select v-model="model.city" ref="citySelect">
+    <select v-model="model.city">
       <option disabled :value="null">Выберите город</option>
       <option :selected="isSelectedCity" v-for="(city, idx) in cities" :value="city.id" :key="idx">
         {{ city.name }}
@@ -10,14 +10,14 @@
   </div>
   <div>
     <p>Цех:</p>
-    <select v-model="model.department" ref="departmentSelect" :disabled="isDepSelDisabled">
+    <select v-model="model.department" :disabled="isDepSelDisabled">
       <option disabled :value="null">Выберите цех</option>
       <option v-for="(department, idx) in deps" :value="department.id" :key="idx">{{ department.name }}</option>
     </select>
   </div>
   <div>
     <p>Сотрудник:</p>
-    <select v-model="model.employee" ref="employeeSelect" :disabled="isEmpSelDisabled">
+    <select v-model="model.employee" :disabled="isEmpSelDisabled">
       <option disabled :value="null">Выберите сотрудника</option>
       <option v-for="(employee, idx) in emp" :value="employee.id" :key="idx">{{ employee.name }}</option>
     </select>
@@ -51,12 +51,10 @@
 
   const deps = ref();
   const emp = ref();
-  const citySelect = ref();
-  const departmentSelect = ref();
-  const employeeSelect = ref();
+
   const isDepSelDisabled = ref(true);
   const isEmpSelDisabled = ref(true);
-  const isSelectedCity = ref();
+
   const model = ref({
     city: null,
     department: null,
@@ -64,7 +62,7 @@
     brigade: null,
     shift: null,
   });
-  watch(model, () => {}, { deep: true });
+
   watch(
     () => model.value.city,
     (newValue) => {
@@ -74,10 +72,11 @@
       model.value.department = null;
     }
   );
+
   watch(
     () => model.value.department,
     (newValue) => {
-      const _emp = employees.filter((employee) => newValue === employee.departmentId);
+      const _emp = employees.filter(({ departmentId }) => newValue === departmentId);
       emp.value = _emp;
       isEmpSelDisabled.value = false;
       model.value.employee = null;
